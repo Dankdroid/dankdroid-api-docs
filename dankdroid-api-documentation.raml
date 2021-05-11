@@ -42,6 +42,78 @@ types:
         type: string
         required: true
         description: The static image's CDN url
+  item:
+    type: object
+    properties: 
+      id:
+        type: string
+        required: true
+        description: The item's unique identifier
+      name:
+        type: string
+        required: true
+        description: The item's name
+      cost:
+        type: number
+        required: true
+        description: The item's cost
+      emoji:
+        type: string
+        required: true
+        description: The item's emoji
+  userItem:
+    type: object
+    properties: 
+      userId:
+        type: string
+        required: true
+        description: The user's Discord ID
+      item:
+        type: item
+        required: true
+        description: The user's owned item
+      amount:
+        type: number
+        required: true
+        description: Amount of items of this type that the user owns
+  userLevel:
+    type: object
+    properties: 
+      userId:
+        type: string
+        required: true
+        description: The user's Discord ID
+      guildId:
+        type: string
+        required: true
+        description: The guild's Discord ID
+      xp:
+        type: number
+        required: true
+        description: The user's experience in the provided guild
+      level:
+        type: number
+        required: true
+        description: The user's level in the provided guild
+  user:
+    type: object
+    properties: 
+      id:
+        type: string
+        required: true
+        description: The user's Discord ID
+      items:
+        type: userItem[]
+        required: true
+        description: The items the user owns
+      balance:
+        type: number
+        required: true
+        description: The user's balance
+      userLevel:
+        type: userLevel
+        required: false
+        description: The user's level object (Only if guildId query parameter provided)
 
 /images:
   /generator/{category}:
@@ -123,7 +195,7 @@ types:
         200:
           body:
             application/json:
-              type: staticImage
+              type: staticImage[]
               example: |
                 [
                   {
@@ -159,3 +231,111 @@ types:
                 message: "TOO_MANY_REQUESTS"
                 requestUrl: "/v1/images/static/cakegifs"
                 timestamp: "2021-05-11T15:40:01.927Z"
+/users:
+  /{userId}:
+    get:
+      description: Retrieve a Dankdroid user by his Discord ID
+      queryParameters:
+        guildId:
+          displayName:  Guild ID
+          type:         string
+          description:  If provided response object will contain userLevel field
+          example:      831529806134247464
+          required:     false
+      responses:
+        200:
+          body:
+            application/json:
+              type: user
+              example: |
+                {
+                  "id": "634723825048748032",
+                  "items": [
+                    {
+                      "userId": "634723825048748032",
+                      "item": {
+                        "id": "6082f98973ceaef610468cd5",
+                        "name": "Coffee",
+                        "cost": 200,
+                        "emoji": "☕"
+                      },
+                      "amount": 4
+                    }
+                  ],
+                  "balance": 5204
+                }
+        401:
+          body:
+            application/json:
+              type: error
+              example:
+                status: 401
+                message: "UNAUTHORIZED"
+                requestUrl: "/v1/users/634723825048748032"
+                timestamp: "2021-05-11T15:40:01.927Z"
+        404:
+          body:
+            application/json:
+              type: error
+              example:
+                status: 404
+                message: "NOT_FOUND"
+                requestUrl: "/v1/users/not-existing-user-id"
+                timestamp: "2021-05-11T15:40:01.927Z"
+        429:
+          body:
+            application/json:
+              type: error
+              example:
+                status: 429
+                message: "TOO_MANY_REQUESTS"
+                requestUrl: "/v1/users/634723825048748032"
+                timestamp: "2021-05-11T15:40:01.927Z"
+    /items:
+      get:
+        description: Retrieve a Dankdroid user's items
+        responses:
+          200:
+            body:
+              application/json:
+                type: userItem[]
+                example: |
+                  [
+                    {
+                      "userId": "634723825048748032",
+                      "item": {
+                        "id": "6082f98973ceaef610468cd5",
+                        "name": "Coffee",
+                        "cost": 200,
+                        "emoji": "☕"
+                      },
+                      "amount": 4
+                    }
+                  ]
+          401:
+            body:
+              application/json:
+                type: error
+                example:
+                  status: 401
+                  message: "UNAUTHORIZED"
+                  requestUrl: "/v1/users/634723825048748032/items"
+                  timestamp: "2021-05-11T15:40:01.927Z"
+          404:
+            body:
+              application/json:
+                type: error
+                example:
+                  status: 404
+                  message: "NOT_FOUND"
+                  requestUrl: "/v1/users/not-existing-user-id/items"
+                  timestamp: "2021-05-11T15:40:01.927Z"
+          429:
+            body:
+              application/json:
+                type: error
+                example:
+                  status: 429
+                  message: "TOO_MANY_REQUESTS"
+                  requestUrl: "/v1/users/634723825048748032/items"
+                  timestamp: "2021-05-11T15:40:01.927Z"
