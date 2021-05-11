@@ -339,3 +339,134 @@ types:
                   message: "TOO_MANY_REQUESTS"
                   requestUrl: "/v1/users/634723825048748032/items"
                   timestamp: "2021-05-11T15:40:01.927Z"
+/levels:
+  /{guildId}:
+    get:
+      description: Retrieve a Dankdroid guild's user level information
+      queryParameters:
+        sort:
+          displayName:  Sort Mode
+          type:         string
+          description:  Sort by XP ascending or descending (asc or desc)
+          example:      desc
+          required:     false
+          default:      desc
+        limit:
+          displayName:  Limit
+          type:         number
+          description:  Limit the amount of results
+          example:      5
+          required:     false
+          default:      10
+          minimum:      1
+          maximum:      10
+      responses:
+        200:
+          body:
+            application/json:
+              type: userLevel[]
+              example: |
+                [
+                  {
+                    "userId": "634723825048748032",
+                    "guildId": "831529806134247464",
+                    "xp": 2044,
+                    "level": 4
+                  },
+                  {
+                    "userId": "271364449783382016",
+                    "guildId": "831529806134247464",
+                    "xp": 292,
+                    "level": 1
+                  },
+                  {
+                    "userId": "514115479963697170",
+                    "guildId": "831529806134247464",
+                    "xp": 163,
+                    "level": 1
+                  },
+                  {
+                    "userId": "720399747470458892",
+                    "guildId": "831529806134247464",
+                    "xp": 72,
+                    "level": 0
+                  }
+                ]
+        400:
+          body:
+            application/json:
+              type: error
+              example:
+                status: 400
+                message: "BAD_REQUEST"
+                requestUrl: "/v1/levels/831529806134247464/?sort=not_a_valid_sort_mode"
+                timestamp: "2021-05-11T15:40:01.927Z"
+        401:
+          body:
+            application/json:
+              type: error
+              example:
+                status: 401
+                message: "UNAUTHORIZED"
+                requestUrl: "/v1/levels/831529806134247464"
+                timestamp: "2021-05-11T15:40:01.927Z"
+        404:
+          body:
+            application/json:
+              type: error
+              example:
+                status: 404
+                message: "NOT_FOUND"
+                requestUrl: "/v1/levels/not-existing-guild-id"
+                timestamp: "2021-05-11T15:40:01.927Z"
+        429:
+          body:
+            application/json:
+              type: error
+              example:
+                status: 429
+                message: "TOO_MANY_REQUESTS"
+                requestUrl: "/v1/levels/831529806134247464"
+                timestamp: "2021-05-11T15:40:01.927Z"
+    /{userId}:
+      get:
+        description: Retrieve a Dankdroid user's level information of a specific guild
+        responses:
+          200:
+            body:
+              application/json:
+                type: userLevel
+                example: |
+                  {
+                    "userId": "634723825048748032",
+                    "guildId": "831529806134247464",
+                    "xp": 2044,
+                    "level": 4
+                  }
+          401:
+            body:
+              application/json:
+                type: error
+                example:
+                  status: 401
+                  message: "UNAUTHORIZED"
+                  requestUrl: "/v1/levels/831529806134247464/634723825048748032"
+                  timestamp: "2021-05-11T15:40:01.927Z"
+          404:
+            body:
+              application/json:
+                type: error
+                example:
+                  status: 404
+                  message: "NOT_FOUND"
+                  requestUrl: "/v1/levels/not-existing-guild-id/634723825048748032"
+                  timestamp: "2021-05-11T15:40:01.927Z"
+          429:
+            body:
+              application/json:
+                type: error
+                example:
+                  status: 429
+                  message: "TOO_MANY_REQUESTS"
+                  requestUrl: "/v1/levels/831529806134247464/634723825048748032"
+                  timestamp: "2021-05-11T15:40:01.927Z"
