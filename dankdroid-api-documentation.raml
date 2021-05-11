@@ -470,3 +470,110 @@ types:
                   message: "TOO_MANY_REQUESTS"
                   requestUrl: "/v1/levels/831529806134247464/634723825048748032"
                   timestamp: "2021-05-11T15:40:01.927Z"
+/items:
+  get:
+    description: Retrieve all Dankdroid's virtual shop items
+    queryParameters:
+      minCost:
+        displayName:  Minimum Cost
+        type:         number
+        description:  Show only items that cost at least the provided minimum cost
+        example:      150
+        required:     false
+        minimum:      0
+      maxCost:
+        displayName:  Maximum Cost
+        type:         number
+        description:  Show only items that cost at most the provided maximum cost
+        example:      500
+        required:     false
+        minimum:      0
+    responses:
+      200:
+        body:
+          application/json:
+            type: item[]
+            example: |
+              [
+                {
+                  "id": "6082f98973ceaef610468cd3",
+                  "name": "Cake",
+                  "cost": 500,
+                  "emoji": "🍰"
+                },
+                {
+                  "id": "6082f98973ceaef610468cd5",
+                  "name": "Coffee",
+                  "cost": 200,
+                  "emoji": "☕"
+                }
+              ]
+      400:
+        body:
+          application/json:
+            type: error
+            example:
+              status: 400
+              message: "BAD_REQUEST"
+              requestUrl: "/v1/items?minCost=not_a_valid_minCost"
+              timestamp: "2021-05-11T15:40:01.927Z"
+      401:
+        body:
+          application/json:
+            type: error
+            example:
+              status: 401
+              message: "UNAUTHORIZED"
+              requestUrl: "/v1/items"
+              timestamp: "2021-05-11T15:40:01.927Z"
+      429:
+        body:
+          application/json:
+            type: error
+            example:
+              status: 429
+              message: "TOO_MANY_REQUESTS"
+              requestUrl: "/v1/items"
+              timestamp: "2021-05-11T15:40:01.927Z"
+  /{itemId}:
+    get:
+      description: Retrieve a Dankdroid's virtual shop item by its ID
+      responses:
+        200:
+          body:
+            application/json:
+              type: item
+              example: |
+                {
+                  "id": "6082f98973ceaef610468cd3",
+                  "name": "Cake",
+                  "cost": 500,
+                  "emoji": "🍰"
+                }
+        401:
+          body:
+            application/json:
+              type: error
+              example:
+                status: 401
+                message: "UNAUTHORIZED"
+                requestUrl: "/v1/items/6082f98973ceaef610468cd3"
+                timestamp: "2021-05-11T15:40:01.927Z"
+        404:
+          body:
+            application/json:
+              type: error
+              example:
+                status: 404
+                message: "NOT_FOUND"
+                requestUrl: "/v1/items/not-existing-item-id"
+                timestamp: "2021-05-11T15:40:01.927Z"
+        429:
+          body:
+            application/json:
+              type: error
+              example:
+                status: 429
+                message: "TOO_MANY_REQUESTS"
+                requestUrl: "/v1/items/6082f98973ceaef610468cd3"
+                timestamp: "2021-05-11T15:40:01.927Z"
