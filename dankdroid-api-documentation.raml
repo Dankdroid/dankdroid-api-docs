@@ -3,6 +3,13 @@
 title: Dankdroid API
 baseUri: https://api.dankdroid.xyz/{version}
 version: v1
+securitySchemes:
+  API-Key:
+    description: |
+      This API uses API-Key authentication.
+      There must be a API-Key header on every request.
+      Example: "API-Key ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    type: API-Key
 
 types:
   error:
