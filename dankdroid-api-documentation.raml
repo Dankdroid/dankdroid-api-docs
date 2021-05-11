@@ -5,6 +5,25 @@ baseUri: https://api.dankdroid.xyz/{version}
 version: v1
 
 types:
+  error:
+    type: object
+    properties: 
+      status:
+        type: number
+        required: true
+        description: Response status code
+      message:
+        type: string
+        required: false
+        description: Error message
+      requestUrl:
+        type: string
+        required: true
+        description: The request url
+      timestamp:
+        type: datetime
+        required: true
+        description: The exact time the error occurred
   generatedImage:
     type: file
     fileTypes: ['image/png', 'image/jpeg']
@@ -38,3 +57,12 @@ types:
           body:
             image/png:
               type: generatedImage
+        404:
+          body:
+            application/json:
+              type: error
+              example:
+                status: 404
+                message: "NOT_FOUND"
+                requestUrl: "/v1/images/generator/not-existing-category"
+                timestamp: "2021-05-11T15:40:01.927Z"
