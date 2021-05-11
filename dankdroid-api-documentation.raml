@@ -27,6 +27,21 @@ types:
   generatedImage:
     type: file
     fileTypes: ['image/png', 'image/jpeg']
+  staticImage:
+    type: object
+    properties: 
+      id:
+        type: string
+        required: true
+        description: The static image's unique identifier
+      category:
+        type: string
+        required: true
+        description: The static image's category
+      url:
+        type: string
+        required: true
+        description: The static image's CDN url
 
 /images:
   /generator/{category}:
@@ -57,6 +72,15 @@ types:
           body:
             image/png:
               type: generatedImage
+        401:
+          body:
+            application/json:
+              type: error
+              example:
+                status: 401
+                message: "UNAUTHORIZED"
+                requestUrl: "/v1/images/static/cakegifs"
+                timestamp: "2021-05-11T15:40:01.927Z"
         404:
           body:
             application/json:
@@ -65,4 +89,73 @@ types:
                 status: 404
                 message: "NOT_FOUND"
                 requestUrl: "/v1/images/generator/not-existing-category"
+                timestamp: "2021-05-11T15:40:01.927Z"
+        429:
+          body:
+            application/json:
+              type: error
+              example:
+                status: 429
+                message: "TOO_MANY_REQUESTS"
+                requestUrl: "/v1/images/static/cakegifs"
+                timestamp: "2021-05-11T15:40:01.927Z"
+  /static/{category}:
+    get:
+      description: Retrieve a list of static images
+      queryParameters:
+        limit:
+          displayName:  Limit
+          type:         number
+          description:  Limit the amount of results
+          example:      5
+          required:     false
+          default:      1
+          minimum:      1
+          maximum:      10
+        random:
+          displayName:  Random Results
+          type:         boolean
+          description:  Set if results should be random or not
+          example:      true
+          required:     false
+          default:      true
+      responses:
+        200:
+          body:
+            application/json:
+              type: staticImage
+              example: |
+                [
+                  {
+                    "id": "609953bd92fb00054999109e",
+                    "category": "cakegifs",
+                    "url": "https://cdn.dankdroid.xyz/api/images/static/cakegifs/609953bd92fb00054999109e.gif"
+                  }
+                ]
+        401:
+          body:
+            application/json:
+              type: error
+              example:
+                status: 401
+                message: "UNAUTHORIZED"
+                requestUrl: "/v1/images/static/cakegifs"
+                timestamp: "2021-05-11T15:40:01.927Z"
+        404:
+          body:
+            application/json:
+              type: error
+              example:
+                status: 404
+                message: "NOT_FOUND"
+                requestUrl: "/v1/images/static/not-existing-category"
+                timestamp: "2021-05-11T15:40:01.927Z"
+        429:
+          body:
+            application/json:
+              type: error
+              example:
+                status: 429
+                message: "TOO_MANY_REQUESTS"
+                requestUrl: "/v1/images/static/cakegifs"
                 timestamp: "2021-05-11T15:40:01.927Z"
