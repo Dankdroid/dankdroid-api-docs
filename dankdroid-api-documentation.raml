@@ -1,0 +1,40 @@
+#%RAML 1.0
+---
+title: Dankdroid API
+baseUri: https://api.dankdroid.xyz/{version}
+version: v1
+
+types:
+  generatedImage:
+    type: file
+    fileTypes: ['image/png', 'image/jpeg']
+
+/images:
+  /generator/{category}:
+    get:
+      description: Retrieve a generated image
+      queryParameters:
+        type:
+          displayName:  Image Type
+          type:         string
+          description:  Response Image Type (jpeg, jpg or png)
+          example:      png
+          required:     false
+          default:      png
+        userOneId:
+          displayName:  User One ID
+          type:         string
+          description:  Discord ID of the first user for image generation
+          example:      634723825048748032
+          required:     true
+        userTwoId:
+          displayName:  User Two ID
+          type:         string
+          description:  Discord ID of the second user for image generation
+          example:      271364449783382016
+          required:     true
+      responses:
+        200:
+          body:
+            image/png:
+              type: generatedImage
